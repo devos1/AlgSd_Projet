@@ -1,0 +1,18 @@
+﻿La génération a démarré 11.03.2014 21:20:18.
+Projet "E:\DevOs\Heig-Vd\AlgSd\AlgSd_Projet\AlgSd_Projet\AlgSd_Projet.vcxproj" sur le nœud 2 (Build cible(s)).
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt fonctions.c
+  fonctions.c
+e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(19): warning C4101: 'nouveau' : variable locale non référencée
+e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(39): error C2065: 'etudiant' : identificateur non déclaré
+e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(39): error C2440: 'fonction' : impossible de convertir de 'int' en 'typeDonnee'
+e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(39): warning C4024: 'creerElt' : types différents pour le paramètre formel et réel 1
+e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(39): error C2099: l'initialiseur n'est pas une constante
+e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(40): error C2059: erreur de syntaxe : 'if'
+e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(44): error C2059: erreur de syntaxe : 'return'
+e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(45): error C2059: erreur de syntaxe : '}'
+Génération du projet "E:\DevOs\Heig-Vd\AlgSd\AlgSd_Projet\AlgSd_Projet\AlgSd_Projet.vcxproj" terminée (Build cible(s)) -- ÉCHEC.
+
+ÉCHEC de la build.
+
+Temps écoulé 00:00:01.03

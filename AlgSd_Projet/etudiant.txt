@@ -1,0 +1,13 @@
+112 Varrel	Paul	15	01	1987 
+155 Durand	Xavier	27	01	1979
+110 Coulet	Claudine  02	02	1990
+152 Aguiar	Armand	25	12	1989
+132 Martin	Alain	08	08	1985
+161 Dupond	Jean	14	07	1988
+115 Porchet	Corinne	16	06	1987
+122 Braun	Nicole	31	05	1992
+145 Buhler	Annie	17	09	1993
+129 Genoud	Marie	09	11	1985
+148 Genoud	Albert	04	04	1989
+187 Berthoud	Sylvie	22	03	1988
+
