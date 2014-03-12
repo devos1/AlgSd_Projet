@@ -85,7 +85,18 @@ int genererFichierMoyenne()
 
 int insererEntier()
 {
+	int n, valeur;
+	char ligne[80];
 
+	fgets (ligne, 80, stdin);
+	n = sscanf (ligne, "%d", &valeur);
+	while (n != 1)
+	{
+		printf ("Entrer une valeur entiere : ");
+		fgets (ligne, 80, stdin);
+		n = sscanf (ligne, "%d", &valeur);
+	}
+	return valeur;
 }
 float insererFlottant()
 {
