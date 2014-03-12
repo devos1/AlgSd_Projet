@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "liste.h"
+#include "fonctions.h"
 
 #define FICHIER_ETUDIANTS "etudiant.txt"
 #define VRAI 1
@@ -47,13 +48,35 @@ int recupererNotesFichier(char *nomFichier)
 {
 	// insererNote
 }
-int insererNote(typeDonnee *etudiant)
+int insererNote(typeDonnee *etudiant, float note)
 {
-	
-}
-float calculerMoyenne(int *tableauNotes)
-{
+	int resultat;
 
+	resultat = FAUX;
+
+	if (etudiant->nombreNotes < 5)
+	{
+		etudiant->tableauNotes[etudiant->nombreNotes - 1] =  note;
+		etudiant->nombreNotes++;
+		resultat = VRAI;
+	}
+	return resultat;
+}
+/**
+ *	
+ *	nombreNotes doit être supérieur à 0
+ */
+float calculerMoyenne(float *tableauNotes, int nombreNotes)
+{
+	float sommeNotes;
+	int i;
+	sommeNotes = 0;
+
+	for (i = 0; i < nombreNotes; i++)
+	{
+		sommeNotes += tableauNotes[i];
+	}
+	return sommeNotes / nombreNotes;
 }
 int genererFichierMoyenne()
 {

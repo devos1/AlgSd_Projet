@@ -12,6 +12,6 @@ typedef struct {
 	char *prenom;			// Prénom d'étudiant
 	typeDate dateNaissance;	// Date de naissance de l'étudiant
 	int nombreNotes;		// Nombre de notes de l'étudiant
-	int tableauNotes[4];	// Tableau des notes de l'étudiant (max. 5)
+	float tableauNotes[4];	// Tableau des notes de l'étudiant (max. 5)
 	float moyenneNotes;		// Moyenne des notes de l'étudiant
 } typeEtudiant;

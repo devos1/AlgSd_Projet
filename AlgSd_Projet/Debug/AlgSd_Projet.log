@@ -1,18 +1,9 @@
-﻿La génération a démarré 11.03.2014 21:20:18.
-Projet "E:\DevOs\Heig-Vd\AlgSd\AlgSd_Projet\AlgSd_Projet\AlgSd_Projet.vcxproj" sur le nœud 2 (Build cible(s)).
-ClCompile:
-  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt fonctions.c
-  fonctions.c
-e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(19): warning C4101: 'nouveau' : variable locale non référencée
-e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(39): error C2065: 'etudiant' : identificateur non déclaré
-e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(39): error C2440: 'fonction' : impossible de convertir de 'int' en 'typeDonnee'
-e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(39): warning C4024: 'creerElt' : types différents pour le paramètre formel et réel 1
-e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(39): error C2099: l'initialiseur n'est pas une constante
-e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(40): error C2059: erreur de syntaxe : 'if'
-e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(44): error C2059: erreur de syntaxe : 'return'
-e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\fonctions.c(45): error C2059: erreur de syntaxe : '}'
-Génération du projet "E:\DevOs\Heig-Vd\AlgSd\AlgSd_Projet\AlgSd_Projet\AlgSd_Projet.vcxproj" terminée (Build cible(s)) -- ÉCHEC.
+﻿La génération a démarré 12.03.2014 19:05:11.
+     1>Projet "C:\Users\quentinwalter\Documents\GitHub\AlgSd_Projet\AlgSd_Projet\AlgSd_Projet.vcxproj" sur le nœud 2 (Build cible(s)).
+       Le fichier projet contient ToolsVersion="12.0". Cet ensemble d'outils est inconnu ou manquant (vous pouvez résoudre ce problème en installant la version appropriée de MSBuild), ou la build a peut-être été forcée d'utiliser un ToolsVersion particulier pour des raisons de stratégie. Projet traité comme si ToolsVersion="4.0". Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkId=291333.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.Cpp.Platform.targets(44,5): error MSB8020: The builds tools for v120 (Platform Toolset = 'v120') cannot be found. To build using the v120 build tools, either click the Project menu or right-click the solution, and then select "Update VC++ Projects...". Install v120 to build using the v120 build tools.
+     1>Génération du projet "C:\Users\quentinwalter\Documents\GitHub\AlgSd_Projet\AlgSd_Projet\AlgSd_Projet.vcxproj" terminée (Build cible(s)) -- ÉCHEC.
 
 ÉCHEC de la build.
 
-Temps écoulé 00:00:01.03
+Temps écoulé 00:00:00.01
