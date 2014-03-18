@@ -1,9 +1,17 @@
-﻿La génération a démarré 12.03.2014 19:05:11.
-     1>Projet "C:\Users\quentinwalter\Documents\GitHub\AlgSd_Projet\AlgSd_Projet\AlgSd_Projet.vcxproj" sur le nœud 2 (Build cible(s)).
-       Le fichier projet contient ToolsVersion="12.0". Cet ensemble d'outils est inconnu ou manquant (vous pouvez résoudre ce problème en installant la version appropriée de MSBuild), ou la build a peut-être été forcée d'utiliser un ToolsVersion particulier pour des raisons de stratégie. Projet traité comme si ToolsVersion="4.0". Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkId=291333.
-     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.Cpp.Platform.targets(44,5): error MSB8020: The builds tools for v120 (Platform Toolset = 'v120') cannot be found. To build using the v120 build tools, either click the Project menu or right-click the solution, and then select "Update VC++ Projects...". Install v120 to build using the v120 build tools.
-     1>Génération du projet "C:\Users\quentinwalter\Documents\GitHub\AlgSd_Projet\AlgSd_Projet\AlgSd_Projet.vcxproj" terminée (Build cible(s)) -- ÉCHEC.
+﻿La génération a démarré 18.03.2014 21:10:36.
+Projet "E:\DevOs\Heig-Vd\AlgSd\AlgSd_Projet\AlgSd_Projet\AlgSd_Projet.vcxproj" sur le nœud 2 (Build cible(s)).
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt main.c
+  main.c
+e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\main.c(18): warning C4047: 'fonction' : les niveaux d'indirection de 'typeElt **' et de 'typeElt *' sont différents
+e:\devos\heig-vd\algsd\algsd_projet\algsd_projet\main.c(18): warning C4024: 'recupererEtudiantsFichier' : types différents pour le paramètre formel et réel 1
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\DevOs\Heig-Vd\AlgSd\AlgSd_Projet\AlgSd_Projet\Debug\AlgSd_Projet.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\DevOs\Heig-Vd\AlgSd\AlgSd_Projet\AlgSd_Projet\Debug\AlgSd_Projet.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\DevOs\Heig-Vd\AlgSd\AlgSd_Projet\AlgSd_Projet\Debug\AlgSd_Projet.lib" /MACHINE:X86 Debug\fonctions.obj
+  Debug\liste.obj
+  Debug\main.obj
+  AlgSd_Projet.vcxproj -> E:\DevOs\Heig-Vd\AlgSd\AlgSd_Projet\AlgSd_Projet\Debug\AlgSd_Projet.exe
+Génération du projet "E:\DevOs\Heig-Vd\AlgSd\AlgSd_Projet\AlgSd_Projet\AlgSd_Projet.vcxproj" terminée (Build cible(s)).
 
-ÉCHEC de la build.
+La génération a réussi.
 
-Temps écoulé 00:00:00.01
+Temps écoulé 00:00:01.30

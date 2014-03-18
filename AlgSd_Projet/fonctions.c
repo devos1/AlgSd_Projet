@@ -1,53 +1,136 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <stdlib.h>
 #include "liste.h"
-#include "fonctions.h"
+#include "string.h"
 
 #define FICHIER_ETUDIANTS "etudiant.txt"
+#define LONGUEUR_LIGNE 80 
 #define VRAI 1
 #define FAUX 0
 
-int recupererEtudiantsFichier()
+int recupererEtudiantsFichier(typeElt **ptPrem)
 {
-	// initListe
+	typeEtudiant etudiant;
+	typeElt *courant, *nouveau;
+	FILE *fichier;
+	char ligne[LONGUEUR_LIGNE];
+	int n, resultat, erreur;
 
-	// insererEtudiant
+	//Initialisation
+	resultat = FAUX;
+	erreur = FAUX;
+	courant = NULL;
+
+	// Ouverture des fichiers
+	fichier = fopen(FICHIER_ETUDIANTS, "r");
+	if (fichier == NULL) {
+		printf("Le fichier FICHIER_ETUDIANTS n'existe pas\n");
+	}
+	else
+	{
+		fgets(ligne, LONGUEUR_LIGNE, fichier);
+		while (!feof(fichier) && erreur == FAUX)
+		{
+			if (strlen(ligne) > 2)
+			{
+				n = sscanf(ligne, "%d %s %s %d %d %d", &etudiant.matricule, etudiant.nom, etudiant.prenom, &etudiant.dateNaissance.jour, &etudiant.dateNaissance.mois, &etudiant.dateNaissance.annee);
+				if (n != 6)
+				{
+					puts("Erreur dans les donnees du fichier");
+					erreur = VRAI;
+				}
+				else
+				{
+					insererEtudiant(&ptPrem, etudiant);
+				}
+			}
+			fgets(ligne, LONGUEUR_LIGNE, fichier);
+		}
+		fclose(fichier);
+
+		if (!erreur)
+		{
+			resultat = VRAI;
+		}
+	}
+	return resultat;
 }
-/* Insere un élément dans la liste */
-/* Rend 1 si OK et 0 si l'insertion est impossible */
-int insererEtudiant(typeElt **ptPrem,  typeDonnee etudiant)
-{
-	typeElt *courant, *precedent, *nouveau;
-	int res = FAUX;
-	int trouve; // Vrai lorsqu'on trouve où insérer
 
-	/* Chercher l'élément derrière lequel il faut insérer */
-	/* Se placer en tête de liste */
+/* Insere un ÃˆlÃˆment dans la liste */
+/* Rend 1 si OK et 0 si l'insertion est impossible */
+int insererEtudiant(typeElt **ptPrem, typeDonnee etudiant) {
+	typeElt *courant, *precedent, *nouveau;
+	typeDonnee etudiantCourant;
+	int resultat;
+	int trouve; // Vrai lorsqu'on trouve oË˜ insÃˆrer
+
+	/* Chercher l'ÃˆlÃˆment derriÃ‹re lequel il faut insÃˆrer */
+	/* Se placer en tÃte de liste */
 	courant = *ptPrem;
 	precedent = NULL; // Il n'y a pas de precedant
 	trouve = FAUX;
+	resultat = FAUX;
+
 	while (courant != NULL && trouve == FAUX) {
-		if (etudiant <= valElt(courant)) {
-			trouve = VRAI; // On a trouvé où insérer la nouvelle valeur
-		} else {
-			precedent = courant;      // On garde un pointeur sur le précédent
+		etudiantCourant = valElt(courant);
+		if (etudiant.matricule <= etudiantCourant.matricule) {
+			trouve = VRAI; // On a trouvÃˆ oË˜ insÃˆrer la nouvelle valeur
+		}
+		else {
+			precedent = courant;      // On garde un pointeur sur le prÃˆcÃˆdent
 			courant = suivantElt(courant); // On passe au suivant
 		}
 	}
-	// A la fin de la boucle precedent pointe sur l'élément derrière lequel
-	// on doit insérer un nouvel élément ou est égal à NULL si on insère 
-	// en début de liste
-	nouveau = creerElt (etudiant);
+	// A la fin de la boucle precedent pointe sur l'ÃˆlÃˆment derriÃ‹re lequel
+	// on doit insÃˆrer un nouvel ÃˆlÃˆment ou est Ãˆgal â€¡ NULL si on insÃ‹re 
+	// en dÃˆbut de liste
+	nouveau = creerElt(etudiant);
 	if (nouveau != NULL) {
-		insereElt (ptPrem, precedent, nouveau);
-		res = VRAI; // C'est OK
+		insereElt(ptPrem, precedent, nouveau);
+		resultat = VRAI; // C'est OK
 	}
-	return res;
+	return resultat;
 }
+
+
+
+/* Insere un Ã©lÃ©ment dans la liste */
+/* Rend 1 si OK et 0 si l'insertion est impossible */
+//int insererEtudiant(typeElt **ptPrem,  typeDonnee etudiant)
+//{
+//	typeElt *courant, *precedent, *nouveau;
+//	int res = FAUX;
+//	int trouve; // Vrai lorsqu'on trouve oÃ¹ insÃ©rer
+//
+//	/* Chercher l'Ã©lÃ©ment derriÃ¨re lequel il faut insÃ©rer */
+//	/* Se placer en tÃªte de liste */
+//	courant = *ptPrem;
+//	precedent = NULL; // Il n'y a pas de precedant
+//	trouve = FAUX;
+//	while (courant != NULL && trouve == FAUX) {
+//		if (etudiant <= valElt(courant)) {
+//			trouve = VRAI; // On a trouvÃ© oÃ¹ insÃ©rer la nouvelle valeur
+//		} else {
+//			precedent = courant;      // On garde un pointeur sur le prÃ©cÃ©dent
+//			courant = suivantElt(courant); // On passe au suivant
+//		}
+//	}
+//	// A la fin de la boucle precedent pointe sur l'Ã©lÃ©ment derriÃ¨re lequel
+//	// on doit insÃ©rer un nouvel Ã©lÃ©ment ou est Ã©gal Ã  NULL si on insÃ¨re 
+//	// en dÃ©but de liste
+//	nouveau = creerElt (etudiant);
+//	if (nouveau != NULL) {
+//		insereElt (ptPrem, precedent, nouveau);
+//		res = VRAI; // C'est OK
+//	}
+//	return res;
+//}
+
 int recupererNotesFichier(char *nomFichier)
 {
 	// insererNote
 }
+
 int insererNote(typeDonnee *etudiant, float note)
 {
 	int resultat;
@@ -64,7 +147,7 @@ int insererNote(typeDonnee *etudiant, float note)
 }
 /**
  *	
- *	nombreNotes doit être supérieur à 0
+ *	nombreNotes doit Ãªtre supÃ©rieur Ã  0
  */
 float calculerMoyenne(float *tableauNotes, int nombreNotes)
 {
