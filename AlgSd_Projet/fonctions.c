@@ -1,4 +1,8 @@
-﻿#define _CRT_SECURE_NO_WARNINGS 1
+﻿/**
+ * Fonctions du programme (fonctions.c)
+ * Oscar Da Silva et Quentin Walter, HEIG-VD, mars 2014
+ */
+#define _CRT_SECURE_NO_WARNINGS 1
 #include <stdio.h>
 #include <stdlib.h>
 #include "liste.h"
@@ -12,7 +16,7 @@
 int recupererEtudiantsFichier(typeElt **ptPrem)
 {
 	typeEtudiant etudiant;
-	typeElt *courant, *nouveau;
+	typeElt *courant;
 	FILE *fichier;
 	char ligne[LONGUEUR_LIGNE];
 	int n, resultat, erreur;
@@ -34,7 +38,7 @@ int recupererEtudiantsFichier(typeElt **ptPrem)
 		{
 			if (strlen(ligne) > 2)
 			{
-				n = sscanf(ligne, "%d %s %s %d %d %d", &etudiant.matricule, etudiant.nom, etudiant.prenom, &etudiant.dateNaissance.jour, &etudiant.dateNaissance.mois, &etudiant.dateNaissance.annee);
+				n = sscanf(ligne, "%d %s %s %d %d %d 0 0", &etudiant.matricule, etudiant.nom, etudiant.prenom, &etudiant.dateNaissance.jour, &etudiant.dateNaissance.mois, &etudiant.dateNaissance.annee);//, &etudiant.nombreNotes, &etudiant.moyenneNotes);
 				if (n != 6)
 				{
 					puts("Erreur dans les donnees du fichier");
@@ -43,7 +47,7 @@ int recupererEtudiantsFichier(typeElt **ptPrem)
 				else
 				{
 					// On initialise le nombre et la moyenne des notes à 0
-					etudiant.nombreNotes = 0;
+					etudiant.nombreNotes = 0; // Ne s'initialise pas...
 					etudiant.moyenneNotes = 0;
 					if (!insererEtudiant(ptPrem, etudiant))
 					{
@@ -64,35 +68,28 @@ int recupererEtudiantsFichier(typeElt **ptPrem)
 	return resultat;
 }
 
-/* Insere un ÈlÈment dans la liste */
-/* Rend 1 si OK et 0 si l'insertion est impossible */
 int insererEtudiant(typeElt **ptPrem, typeEtudiant etudiant)
 {
 	typeElt *courant, *precedent, *nouveau;
 	typeDonnee etudiantCourant;
 	int resultat;
-	int trouve; // Vrai lorsqu'on trouve o˘ insÈrer
+	int trouve;
 
-	/* Chercher l'ÈlÈment derriËre lequel il faut insÈrer */
-	/* Se placer en tÍte de liste */
 	courant = *ptPrem;
-	precedent = NULL; // Il n'y a pas de precedant
+	precedent = NULL;
 	trouve = FAUX;
 	resultat = FAUX;
 
 	while (courant != NULL && trouve == FAUX) {
 		etudiantCourant = valElt(courant);
 		if (etudiant.matricule <= etudiantCourant.matricule) {
-			trouve = VRAI; // On a trouvÈ o˘ insÈrer la nouvelle valeur
+			trouve = VRAI;
 		}
 		else {
-			precedent = courant;      // On garde un pointeur sur le prÈcÈdent
-			courant = suivantElt(courant); // On passe au suivant
+			precedent = courant;
+			courant = suivantElt(courant);
 		}
 	}
-	// A la fin de la boucle precedent pointe sur l'ÈlÈment derriËre lequel
-	// on doit insÈrer un nouvel ÈlÈment ou est Ègal ‡ NULL si on insËre 
-	// en dÈbut de liste
 	nouveau = creerElt(etudiant);
 	if (nouveau != NULL) {
 		insereElt(ptPrem, precedent, nouveau);
@@ -100,10 +97,6 @@ int insererEtudiant(typeElt **ptPrem, typeEtudiant etudiant)
 	}
 	return resultat;
 }
-/**
- *	
- *	
- */
 int recupererNotesFichier(typeElt *ptPrem)
 {
 	typeElt *courant;
@@ -113,13 +106,12 @@ int recupererNotesFichier(typeElt *ptPrem)
 	float note;
 	FILE *fichier;
 
-	nomFichier = insererChaine();
-
 	//Initialisation
 	resultat = FAUX;
 	erreur = FAUX;
 	trouve = FAUX;
 	courant = ptPrem;
+	nomFichier = insererChaine();
 
 	// Ouverture des fichiers
 	fichier = fopen(nomFichier, "r");
@@ -151,7 +143,14 @@ int recupererNotesFichier(typeElt *ptPrem)
 					}
 					if (trouve)
 					{
-						if (insererNote(&etudiant, note))
+						if (etudiant.nombreNotes <= NOMBRE_NOTES_MAX)
+						{
+							printf("%f\n", note);
+							etudiant.tableauNotes[etudiant.nombreNotes - 1] = note;
+							etudiant.nombreNotes++;
+							etudiant.moyenneNotes = calculerMoyenne(etudiant.tableauNotes, etudiant.nombreNotes);
+						}
+						/*if (insererNote(, note))
 						{
 							trouve = FAUX; // On remet le flag trouvé à FAUX
 						}
@@ -159,7 +158,7 @@ int recupererNotesFichier(typeElt *ptPrem)
 						{
 							printf("L'etudiant %d a deja cinq notes\n", etudiant.matricule);
 							erreur = VRAI;
-						}
+						}*/
 					}
 					else
 					{
@@ -260,14 +259,29 @@ void imprimerEtudiants(typeElt *listeEtudiants)
 {
 	typeElt *courant;
 	typeDonnee etudiant;
+	int i;
+
 	courant = listeEtudiants;
+
 	while (courant != NULL) {
 		etudiant = valElt(courant);
-		printf ("\n%d\t%20s\t%20s\t%d/%d/%d\t%.1f", etudiant.matricule, etudiant.nom, etudiant.prenom, etudiant.dateNaissance.jour, etudiant.dateNaissance.mois, etudiant.dateNaissance.annee, etudiant.moyenneNotes);
+		printf ("Etudiant %d\t%s %s\tne(e) le %02d.%02d.%4d\n", etudiant.matricule, etudiant.nom, etudiant.prenom, etudiant.dateNaissance.jour, etudiant.dateNaissance.mois, etudiant.dateNaissance.annee);
+		if (etudiant.nombreNotes) // Si l'etudiant a au moins une note
+		{
+			for (i = 0; i < etudiant.nombreNotes; i++)
+			{
+				printf("%.1f ", etudiant.moyenneNotes);
+			}
+			printf(" : %.1f\n", etudiant.moyenneNotes);
+		}
+		else
+		{
+			printf("Aucune note\n");
+		}
 		courant = suivantElt(courant);
 	}
 }
-void detruireListe(typeElt **premier)
+void detruireListe(typeElt **ptPrem);
 {
 	while (*premier != NULL) {  // Tant qu'il reste un élément
 		detruireElt(premier, NULL); // Detruire le premier

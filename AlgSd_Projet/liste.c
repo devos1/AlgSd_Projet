@@ -1,5 +1,6 @@
-/* Liste.cpp Exercice 1 */
-
+/**
+ * Fonctions primitives des listes (liste.c)
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include "liste.h"

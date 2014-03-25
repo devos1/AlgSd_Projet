@@ -1,5 +1,8 @@
+/**
+ * Header des fonctions primitives des listes (liste.h)
+ * Oscar Da Silva et Quentin Walter, HEIG-VD, mars 2014
+ */
 #include "fonctions.h"
-/* Liste.h Exercice 1*/
 
 /* Type des éléments stockés dans le champ donnée */
 typedef typeEtudiant typeDonnee;
