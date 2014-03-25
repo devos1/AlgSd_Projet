@@ -5,7 +5,7 @@
 #include "fonctions.h"
 
 /* Type des éléments stockés dans le champ donnée */
-typedef typeEtudiant typeDonnee;
+typedef typeEtudiant *typeDonnee;
 
 /* Structure pour représenter un élément de la liste */
 typedef struct elt {

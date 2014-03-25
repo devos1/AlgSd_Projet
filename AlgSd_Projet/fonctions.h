@@ -2,7 +2,7 @@
  * Header des fonctions du programme (fonctions.h)
  * Oscar Da Silva et Quentin Walter, HEIG-VD, mars 2014
  */
-#define NOMBRE_NOTES_MAX 4
+#define NOMBRE_NOTES_MAX 5
 
 typedef struct {
 	int jour;	// Jour (1-31)

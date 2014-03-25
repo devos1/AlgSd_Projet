@@ -11,7 +11,6 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <stdlib.h>
 #include <stdio.h>
-#include "fonctions.h"
 #include "liste.h"
 
 /**
@@ -26,7 +25,7 @@ int recupererEtudiantsFichier(typeElt **ptPrem);
  * etudiant, structure qui contient les informations de l'etudiant
  * Retourne VRAI (1) si il n'y a pas d'erreur, sinon FAUX (0).
  */
-int insererEtudiant(typeElt **ptPrem, typeEtudiant etudiant);
+int insererEtudiant(typeElt **ptPrem, typeEtudiant *etudiant);
 /**
  * Recupère les notes depuis un fichier
  * ptPrem, pointeur du premier element de la liste
@@ -49,10 +48,10 @@ float insererFlottant();
  */
 void imprimerEtudiants(typeElt *listeEtudiants);
 /**
- * Detruit les elements de la liste
+ * Detruit les elements de la liste des etudiants
  * ptPrem, pointeur qui pointe sur le premier element de la liste
  */
-void detruireListe(typeElt **ptPrem);
+void detruireListeEtudiants(typeElt **ptPrem);
 /**
  * Initialise la liste et permet l'execution des commandes :
  * (1) ajouter des notes depuis un fichier en indiquant son nom
@@ -92,6 +91,6 @@ void main()
 		}
 	}
 	
-	detruireListe(&listeEtudiants);
+	detruireListeEtudiants(&listeEtudiants);
 	system("pause");
 }

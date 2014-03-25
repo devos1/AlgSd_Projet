@@ -12,10 +12,12 @@
 #define LONGUEUR_LIGNE 80 
 #define VRAI 1
 #define FAUX 0
+#define NOTE_MIN 1
+#define NOTE_MAX 6
 
 int recupererEtudiantsFichier(typeElt **ptPrem)
 {
-	typeEtudiant etudiant;
+	typeEtudiant *etudiant;
 	typeElt *courant;
 	FILE *fichier;
 	char ligne[LONGUEUR_LIGNE];
@@ -38,7 +40,8 @@ int recupererEtudiantsFichier(typeElt **ptPrem)
 		{
 			if (strlen(ligne) > 2)
 			{
-				n = sscanf(ligne, "%d %s %s %d %d %d 0 0", &etudiant.matricule, etudiant.nom, etudiant.prenom, &etudiant.dateNaissance.jour, &etudiant.dateNaissance.mois, &etudiant.dateNaissance.annee);//, &etudiant.nombreNotes, &etudiant.moyenneNotes);
+				etudiant = (typeEtudiant*) malloc (sizeof (typeEtudiant));
+				n = sscanf(ligne, "%d %s %s %d %d %d", &etudiant->matricule, etudiant->nom, etudiant->prenom, &etudiant->dateNaissance.jour, &etudiant->dateNaissance.mois, &etudiant->dateNaissance.annee);
 				if (n != 6)
 				{
 					puts("Erreur dans les donnees du fichier");
@@ -47,8 +50,8 @@ int recupererEtudiantsFichier(typeElt **ptPrem)
 				else
 				{
 					// On initialise le nombre et la moyenne des notes à 0
-					etudiant.nombreNotes = 0; // Ne s'initialise pas...
-					etudiant.moyenneNotes = 0;
+					etudiant->nombreNotes = 0; // Ne s'initialise pas...
+					etudiant->moyenneNotes = 0;
 					if (!insererEtudiant(ptPrem, etudiant))
 					{
 						puts("Erreur lors de l'insertion de l'etudiant dans la liste");
@@ -68,10 +71,10 @@ int recupererEtudiantsFichier(typeElt **ptPrem)
 	return resultat;
 }
 
-int insererEtudiant(typeElt **ptPrem, typeEtudiant etudiant)
+int insererEtudiant(typeElt **ptPrem, typeEtudiant *etudiant)
 {
 	typeElt *courant, *precedent, *nouveau;
-	typeDonnee etudiantCourant;
+	typeEtudiant *etudiantCourant;
 	int resultat;
 	int trouve;
 
@@ -82,7 +85,7 @@ int insererEtudiant(typeElt **ptPrem, typeEtudiant etudiant)
 
 	while (courant != NULL && trouve == FAUX) {
 		etudiantCourant = valElt(courant);
-		if (etudiant.matricule <= etudiantCourant.matricule) {
+		if (etudiant->matricule <= etudiantCourant->matricule) {
 			trouve = VRAI;
 		}
 		else {
@@ -91,6 +94,7 @@ int insererEtudiant(typeElt **ptPrem, typeEtudiant etudiant)
 		}
 	}
 	nouveau = creerElt(etudiant);
+
 	if (nouveau != NULL) {
 		insereElt(ptPrem, precedent, nouveau);
 		resultat = VRAI;
@@ -100,7 +104,7 @@ int insererEtudiant(typeElt **ptPrem, typeEtudiant etudiant)
 int recupererNotesFichier(typeElt *ptPrem)
 {
 	typeElt *courant;
-	typeEtudiant etudiant;
+	typeEtudiant *etudiant;
 	char *nomFichier, ligne[LONGUEUR_LIGNE];
 	int n, resultat, trouve, erreur, matricule;
 	float note;
@@ -132,7 +136,7 @@ int recupererNotesFichier(typeElt *ptPrem)
 					while (courant != NULL && trouve == FAUX)
 					{
 						etudiant = valElt(courant);
-						if (etudiant.matricule == matricule)
+						if (etudiant->matricule == matricule)
 						{
 							trouve = VRAI;
 						}
@@ -143,22 +147,14 @@ int recupererNotesFichier(typeElt *ptPrem)
 					}
 					if (trouve)
 					{
-						if (etudiant.nombreNotes <= NOMBRE_NOTES_MAX)
-						{
-							printf("%f\n", note);
-							etudiant.tableauNotes[etudiant.nombreNotes - 1] = note;
-							etudiant.nombreNotes++;
-							etudiant.moyenneNotes = calculerMoyenne(etudiant.tableauNotes, etudiant.nombreNotes);
-						}
-						/*if (insererNote(, note))
+						if (insererNote(etudiant, note))
 						{
 							trouve = FAUX; // On remet le flag trouvé à FAUX
 						}
 						else
 						{
-							printf("L'etudiant %d a deja cinq notes\n", etudiant.matricule);
 							erreur = VRAI;
-						}*/
+						}
 					}
 					else
 					{
@@ -190,20 +186,26 @@ int insererNote(typeEtudiant *etudiant, float note)
 	int resultat;
 
 	resultat = FAUX;
-	if (etudiant->nombreNotes <= NOMBRE_NOTES_MAX)
+	if (etudiant->nombreNotes < NOMBRE_NOTES_MAX)
 	{
-		printf("%f\n", note);
-		etudiant->tableauNotes[etudiant->nombreNotes - 1] = note;
-		etudiant->nombreNotes++;
-		etudiant->moyenneNotes = calculerMoyenne(etudiant->tableauNotes, etudiant->nombreNotes);
-		resultat = VRAI;
+		if (note > NOTE_MAX || note < NOTE_MIN)
+		{
+			printf("La note doit etre comprise entre %d et %d\n", NOTE_MIN, NOTE_MAX);
+		}
+		else
+		{
+			etudiant->tableauNotes[etudiant->nombreNotes] = note;
+			etudiant->nombreNotes++;
+			etudiant->moyenneNotes = calculerMoyenne(etudiant->tableauNotes, etudiant->nombreNotes);
+			resultat = VRAI;
+		}
+	}
+	else
+	{
+		printf("L'etudiant %d a deja cinq notes\n", etudiant->matricule);
 	}
 	return resultat;
 }
-/**
- *	
- *	nombreNotes doit être supérieur à 0
- */
 float calculerMoyenne(float tableauNotes[NOMBRE_NOTES_MAX], int nombreNotes)
 {
 	float sommeNotes;
@@ -216,7 +218,11 @@ float calculerMoyenne(float tableauNotes[NOMBRE_NOTES_MAX], int nombreNotes)
 	}
 	return sommeNotes / nombreNotes;
 }
-int genererFichierMoyenne()
+int trierEtudiantsMoyenne(typeElt **ptPrem)
+{
+	
+}
+int genererFichierMoyenne(typeElt *ptPrem)
 {
 	
 }
@@ -258,21 +264,21 @@ char *insererChaine()
 void imprimerEtudiants(typeElt *listeEtudiants)
 {
 	typeElt *courant;
-	typeDonnee etudiant;
+	typeEtudiant *etudiant;
 	int i;
 
 	courant = listeEtudiants;
 
 	while (courant != NULL) {
 		etudiant = valElt(courant);
-		printf ("Etudiant %d\t%s %s\tne(e) le %02d.%02d.%4d\n", etudiant.matricule, etudiant.nom, etudiant.prenom, etudiant.dateNaissance.jour, etudiant.dateNaissance.mois, etudiant.dateNaissance.annee);
-		if (etudiant.nombreNotes) // Si l'etudiant a au moins une note
+		printf ("Etudiant %d\t%s %s\tne(e) le %02d.%02d.%4d\n", etudiant->matricule, etudiant->nom, etudiant->prenom, etudiant->dateNaissance.jour, etudiant->dateNaissance.mois, etudiant->dateNaissance.annee);
+		if (etudiant->nombreNotes) // Si l'etudiant a au moins une note
 		{
-			for (i = 0; i < etudiant.nombreNotes; i++)
+			for (i = 0; i < etudiant->nombreNotes; i++)
 			{
-				printf("%.1f ", etudiant.moyenneNotes);
+				printf("%3.1f ", etudiant->tableauNotes[i]);
 			}
-			printf(" : %.1f\n", etudiant.moyenneNotes);
+			printf(" : %.1f\n", etudiant->moyenneNotes);
 		}
 		else
 		{
@@ -281,10 +287,13 @@ void imprimerEtudiants(typeElt *listeEtudiants)
 		courant = suivantElt(courant);
 	}
 }
-void detruireListe(typeElt **ptPrem);
+void detruireListeEtudiants(typeElt **ptPrem)
 {
-	while (*premier != NULL) {  // Tant qu'il reste un élément
-		detruireElt(premier, NULL); // Detruire le premier
+	typeEtudiant *etudiant;
+	while (*ptPrem != NULL) {  // Tant qu'il reste un élément
+		etudiant = valElt(*ptPrem);
+		free(etudiant);
+		detruireElt(ptPrem, NULL); // Detruire le premier
 	}
-	*premier = NULL;
+	*ptPrem = NULL;
 }
