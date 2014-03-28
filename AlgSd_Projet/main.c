@@ -27,6 +27,16 @@ int recupererEtudiantsFichier(typeElt **ptPrem);
  */
 int insererEtudiant(typeElt **ptPrem, typeEtudiant *etudiant);
 /**
+ * 
+ * 
+ */
+int trierEtudiantsMoyenne(typeElt **listeEtudiants);
+/**
+ * 
+ * 
+ */
+int genererFichierMoyenne(typeElt *listeEtudiants);
+/**
  * Recupère les notes depuis un fichier
  * ptPrem, pointeur du premier element de la liste
  * Retourne VRAI (1) si il n'y a pas d'erreur, sinon FAUX (0).
@@ -46,7 +56,7 @@ float insererFlottant();
  * Affiche la liste des etudiants, leurs notes et leur moyenne
  * listeEtudiants, pointeur sur le premier element de la liste des etudiants
  */
-void imprimerEtudiants(typeElt *listeEtudiants);
+void detruireListeEtudiants(typeElt **listeEtudiants);
 /**
  * Detruit les elements de la liste des etudiants
  * ptPrem, pointeur qui pointe sur le premier element de la liste
@@ -61,7 +71,7 @@ void detruireListeEtudiants(typeElt **ptPrem);
  */
 void main()
 {
-	typeElt *listeEtudiants;
+	typeElt *listeEtudiants, *listeEtudiantsTriee;
 	int commande;
 	
 	initListe(&listeEtudiants);
@@ -90,7 +100,11 @@ void main()
 			commande = insererEntier();
 		}
 	}
-	
+	listeEtudiantsTriee = trierEtudiantsMoyenne(&listeEtudiants);
+	//imprimerEtudiants(listeEtudiantsTriee);
+	genererFichierMoyenne(listeEtudiantsTriee);
+	// Détruit les listes
 	detruireListeEtudiants(&listeEtudiants);
+	detruireListeEtudiants(&listeEtudiantsTriee);
 	system("pause");
 }

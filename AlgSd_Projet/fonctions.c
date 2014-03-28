@@ -9,6 +9,7 @@
 #include "string.h"
 
 #define FICHIER_ETUDIANTS "etudiant.txt"
+#define FICHIER_MOYENNES "moyenne.txt"
 #define LONGUEUR_LIGNE 80 
 #define VRAI 1
 #define FAUX 0
@@ -30,8 +31,10 @@ int recupererEtudiantsFichier(typeElt **ptPrem)
 
 	// Ouverture des fichiers
 	fichier = fopen(FICHIER_ETUDIANTS, "r");
-	if (fichier == NULL) {
+	if (fichier == NULL)
+	{
 		printf("Le fichier %s n'existe pas ou n'est pas accessible\n", FICHIER_ETUDIANTS);
+		erreur = VRAI;
 	}
 	else
 	{
@@ -218,13 +221,103 @@ float calculerMoyenne(float tableauNotes[NOMBRE_NOTES_MAX], int nombreNotes)
 	}
 	return sommeNotes / nombreNotes;
 }
-int trierEtudiantsMoyenne(typeElt **ptPrem)
+typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants)
 {
-	
+	typeElt *listeEtudiantsTriee;
+	typeElt *courant, *precedant, *courantTrie, *plusPetiteMoyenne, *precedantPlusPetiteMoyenne;
+	typeEtudiant *etudiant;
+	float moyenneNotes;
+
+	/* Initialiser la liste */
+	initListe(&listeEtudiantsTriee); // Initialiser la nouvelle liste
+	courantTrie = NULL;     // Pointeur sur la nouvelle liste
+
+	while (*listeEtudiants != NULL)
+	{
+		courant = *listeEtudiants; // Pointeur sur la liste initiale
+		precedantPlusPetiteMoyenne = NULL;   // Elément précédant courant1
+		
+		etudiant = valElt(courant);
+		moyenneNotes = etudiant->moyenneNotes;
+		plusPetiteMoyenne = courant;
+		courant = suivantElt(courant);
+
+		while (courant != NULL)
+		{
+			etudiant = valElt(courant);
+			if (etudiant->moyenneNotes < moyenneNotes)
+			{
+				precedantPlusPetiteMoyenne = precedant;
+				plusPetiteMoyenne = courant;
+				moyenneNotes = etudiant->moyenneNotes;
+				courant = suivantElt(courant);
+			}
+			else
+			{
+				precedant = courant;
+				courant = suivantElt(courant);
+			}
+		}
+		insereElt(&listeEtudiantsTriee, courantTrie, plusPetiteMoyenne); // L'insérer dans la nouvelle liste
+		detruireElt(listeEtudiants, precedantPlusPetiteMoyenne); // Le détruire dans la liste initiale
+		courantTrie = plusPetiteMoyenne;
+	}
+	return listeEtudiantsTriee;
 }
-int genererFichierMoyenne(typeElt *ptPrem)
+int genererFichierMoyenne(typeElt *listeEtudiants)
 {
-	
+	FILE *fichier;
+	int i, resultat, erreur;
+	typeElt *courant;
+	typeEtudiant *etudiant;
+
+	resultat = FAUX;
+
+	if (listeEtudiants != NULL)
+	{
+		fichier = fopen(FICHIER_MOYENNES, "w");
+		if (fichier == NULL)
+		{
+			printf("Le fichier %s n'existe pas ou n'est pas accessible\n", FICHIER_MOYENNES);
+			erreur = VRAI;
+			
+		}
+		else
+		{
+			courant = listeEtudiants;
+			while (courant != NULL)
+			{
+				etudiant = valElt(courant);
+				fprintf(fichier, "%d %s %s %d %d %d ", etudiant->matricule, etudiant->nom, etudiant->prenom, etudiant->dateNaissance.jour, etudiant->dateNaissance.mois, etudiant->dateNaissance.annee);
+				if (etudiant->nombreNotes > 0) // Si l'etudiant a au moins une note
+				{
+					for (i = 0; i < etudiant->nombreNotes; i++)
+					{
+						fprintf(fichier, "%3.1f ", etudiant->tableauNotes[i]);
+					}
+					fprintf(fichier, "%.1f\n", etudiant->moyenneNotes);
+				}
+				else
+				{
+					fprintf(fichier, "Aucune note\n");
+				}
+				courant = suivantElt(courant);
+			}
+			fclose(fichier);
+			printf("Le fichier %s a ete genere.\n", FICHIER_MOYENNES);
+		}
+	}
+	else
+	{
+		puts("Aucun etudiant");
+	}
+
+	if (!erreur)
+	{
+		resultat = VRAI;
+	}
+
+	return resultat;
 }
 int insererEntier()
 {
@@ -269,9 +362,10 @@ void imprimerEtudiants(typeElt *listeEtudiants)
 
 	courant = listeEtudiants;
 
-	while (courant != NULL) {
+	while (courant != NULL)
+	{
 		etudiant = valElt(courant);
-		printf ("Etudiant %d\t%s %s\tne(e) le %02d.%02d.%4d\n", etudiant->matricule, etudiant->nom, etudiant->prenom, etudiant->dateNaissance.jour, etudiant->dateNaissance.mois, etudiant->dateNaissance.annee);
+		printf("Etudiant %d\t%s %s\tne(e) le %02d.%02d.%4d\n", etudiant->matricule, etudiant->nom, etudiant->prenom, etudiant->dateNaissance.jour, etudiant->dateNaissance.mois, etudiant->dateNaissance.annee);
 		if (etudiant->nombreNotes) // Si l'etudiant a au moins une note
 		{
 			for (i = 0; i < etudiant->nombreNotes; i++)
@@ -287,13 +381,13 @@ void imprimerEtudiants(typeElt *listeEtudiants)
 		courant = suivantElt(courant);
 	}
 }
-void detruireListeEtudiants(typeElt **ptPrem)
+void detruireListeEtudiants(typeElt **listeEtudiants)
 {
 	typeEtudiant *etudiant;
-	while (*ptPrem != NULL) {  // Tant qu'il reste un élément
-		etudiant = valElt(*ptPrem);
+	while (*listeEtudiants != NULL) {  // Tant qu'il reste un élément
+		etudiant = valElt(*listeEtudiants);
 		free(etudiant);
-		detruireElt(ptPrem, NULL); // Detruire le premier
+		detruireElt(listeEtudiants, NULL); // Detruire le premier
 	}
-	*ptPrem = NULL;
+	*listeEtudiants = NULL;
 }
