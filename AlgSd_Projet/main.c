@@ -30,7 +30,7 @@ int insererEtudiant(typeElt **ptPrem, typeEtudiant *etudiant);
  * 
  * 
  */
-int trierEtudiantsMoyenne(typeElt **listeEtudiants);
+typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants);
 /**
  * 
  * 
@@ -100,11 +100,13 @@ void main()
 			commande = insererEntier();
 		}
 	}
+
 	listeEtudiantsTriee = trierEtudiantsMoyenne(&listeEtudiants);
 	//imprimerEtudiants(listeEtudiantsTriee);
 	genererFichierMoyenne(listeEtudiantsTriee);
 	// Détruit les listes
 	detruireListeEtudiants(&listeEtudiants);
-	detruireListeEtudiants(&listeEtudiantsTriee);
+	listeEtudiantsTriee = NULL;
+	//detruireListeEtudiants(&listeEtudiantsTriee);		// Pas besoin de suppriemr les elements vu qu'ils ont ete supprimes avant
 	system("pause");
 }

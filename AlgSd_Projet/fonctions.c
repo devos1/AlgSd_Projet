@@ -43,7 +43,7 @@ int recupererEtudiantsFichier(typeElt **ptPrem)
 		{
 			if (strlen(ligne) > 2)
 			{
-				etudiant = (typeEtudiant*) malloc (sizeof (typeEtudiant));
+				etudiant = (typeEtudiant*)malloc(sizeof (typeEtudiant));
 				n = sscanf(ligne, "%d %s %s %d %d %d", &etudiant->matricule, etudiant->nom, etudiant->prenom, &etudiant->dateNaissance.jour, &etudiant->dateNaissance.mois, &etudiant->dateNaissance.annee);
 				if (n != 6)
 				{
@@ -221,49 +221,132 @@ float calculerMoyenne(float tableauNotes[NOMBRE_NOTES_MAX], int nombreNotes)
 	}
 	return sommeNotes / nombreNotes;
 }
+//typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants)
+//{
+//	typeElt *listeEtudiantsTriee;
+//	typeElt *courant, *precedant, *courantTrie, *plusPetiteMoyenne, *precedantPlusPetiteMoyenne;
+//	typeEtudiant *etudiant;
+//	float moyenneNotes;
+//
+//	/* Initialiser la liste */
+//	initListe(&listeEtudiantsTriee);			// Initialiser la nouvelle liste
+//	courantTrie = NULL;							// Pointeur sur la nouvelle liste
+//	courant = *listeEtudiants;					// Pointeur sur la liste initiale
+//
+//	while (*listeEtudiants != NULL)
+//	{
+//		precedantPlusPetiteMoyenne = NULL;		// Elément précédant courant1
+//		
+//		etudiant = valElt(courant);
+//		moyenneNotes = etudiant->moyenneNotes;
+//		plusPetiteMoyenne = courant;
+//		
+//		if (etudiant->nombreNotes > 0)			// On en tient pas compte si l'etudiant n'a pas de note
+//		{
+//			if (etudiant->moyenneNotes < moyenneNotes)
+//			{
+//				precedantPlusPetiteMoyenne = precedant;
+//				plusPetiteMoyenne = courant;
+//				moyenneNotes = etudiant->moyenneNotes;
+//				courant = suivantElt(courant);
+//			}
+//			else
+//			{
+//				precedant = courant;
+//				courant = suivantElt(courant);
+//			}
+//		}
+//		else
+//		{
+//			courant = suivantElt(courant);
+//		}
+//		
+//
+//		//courant = suivantElt(courant);
+//
+//		//while (courant != NULL)
+//		//{
+//		//	etudiant = valElt(courant);
+//		//	if (etudiant->moyenneNotes < moyenneNotes)
+//		//	{
+//		//		precedantPlusPetiteMoyenne = precedant;
+//		//		plusPetiteMoyenne = courant;
+//		//		moyenneNotes = etudiant->moyenneNotes;
+//		//		courant = suivantElt(courant);
+//		//	}
+//		//	else
+//		//	{
+//		//		precedant = courant;
+//		//		courant = suivantElt(courant);
+//		//	}
+//		//}
+//
+//
+//		insereElt(&listeEtudiantsTriee, courantTrie, plusPetiteMoyenne); // L'insérer dans la nouvelle liste
+//		//detruireElt(listeEtudiants, precedantPlusPetiteMoyenne); // Le détruire dans la liste initiale
+//		courantTrie = plusPetiteMoyenne;
+//	}
+//	return listeEtudiantsTriee;
+//}
+
 typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants)
 {
-	typeElt *listeEtudiantsTriee;
-	typeElt *courant, *precedant, *courantTrie, *plusPetiteMoyenne, *precedantPlusPetiteMoyenne;
-	typeEtudiant *etudiant;
-	float moyenneNotes;
+	typeElt *precedant, *courant, *nouveau, *courantTrie, *listeEtudiantsTrie, *plusPetiteMoyenne, *precedantTrie;
+	typeEtudiant *etudiant, *etudiantTrie;
+	float moyenneNotes, moyennePlusPetite, moyennePlusPetite2;
+	int trouveMin;
 
-	/* Initialiser la liste */
-	initListe(&listeEtudiantsTriee); // Initialiser la nouvelle liste
-	courantTrie = NULL;     // Pointeur sur la nouvelle liste
+	// Initialiser la liste triee
+	initListe(&listeEtudiantsTrie);
 
-	while (*listeEtudiants != NULL)
+	courant = *listeEtudiants;
+	precedant = NULL;
+	precedantTrie = NULL;
+	moyennePlusPetite = courant->val->moyenneNotes;
+
+	while (courant != NULL)
 	{
-		courant = *listeEtudiants; // Pointeur sur la liste initiale
-		precedantPlusPetiteMoyenne = NULL;   // Elément précédant courant1
-		
-		etudiant = valElt(courant);
-		moyenneNotes = etudiant->moyenneNotes;
-		plusPetiteMoyenne = courant;
-		courant = suivantElt(courant);
+		courantTrie = listeEtudiantsTrie;
+		etudiant = courant->val;
+		nouveau = creerElt(etudiant);
 
-		while (courant != NULL)
+		if (etudiant->moyenneNotes < moyennePlusPetite)				// Insertion en debut de liste
 		{
-			etudiant = valElt(courant);
-			if (etudiant->moyenneNotes < moyenneNotes)
+			insereElt(&listeEtudiantsTrie, courantTrie, nouveau);
+			detruireElt(listeEtudiants, precedant);
+		}
+		else
+		{
+			moyennePlusPetite2 = moyennePlusPetite;
+			trouveMin = FAUX;
+			while (courantTrie != NULL && !trouveMin)		// Tant qu'on a pas le minimum
 			{
-				precedantPlusPetiteMoyenne = precedant;
-				plusPetiteMoyenne = courant;
-				moyenneNotes = etudiant->moyenneNotes;
-				courant = suivantElt(courant);
+				//etudiantTrie = courantTrie->val;
+				if (etudiant->moyenneNotes < moyennePlusPetite2)
+				{
+					insereElt(&listeEtudiantsTrie, precedantTrie, nouveau);
+					trouveMin = VRAI;
+				}
+
+				precedantTrie = courantTrie;
+				courantTrie = suivantElt(courantTrie);
+				if (courantTrie != NULL)
+				{
+					moyennePlusPetite2 = valElt(courantTrie)->moyenneNotes;
+				}			
 			}
-			else
+			if (!trouveMin)
 			{
-				precedant = courant;
-				courant = suivantElt(courant);
+				insereElt(&listeEtudiantsTrie, precedantTrie, nouveau);	// Insertion en dernirere position
 			}
 		}
-		insereElt(&listeEtudiantsTriee, courantTrie, plusPetiteMoyenne); // L'insérer dans la nouvelle liste
-		detruireElt(listeEtudiants, precedantPlusPetiteMoyenne); // Le détruire dans la liste initiale
-		courantTrie = plusPetiteMoyenne;
+		courant = suivantElt(courant);
+
 	}
-	return listeEtudiantsTriee;
+	return listeEtudiantsTrie;
 }
+
+
 int genererFichierMoyenne(typeElt *listeEtudiants)
 {
 	FILE *fichier;
@@ -272,6 +355,7 @@ int genererFichierMoyenne(typeElt *listeEtudiants)
 	typeEtudiant *etudiant;
 
 	resultat = FAUX;
+	erreur = FAUX;
 
 	if (listeEtudiants != NULL)
 	{
@@ -280,7 +364,7 @@ int genererFichierMoyenne(typeElt *listeEtudiants)
 		{
 			printf("Le fichier %s n'existe pas ou n'est pas accessible\n", FICHIER_MOYENNES);
 			erreur = VRAI;
-			
+
 		}
 		else
 		{
@@ -328,9 +412,9 @@ int insererEntier()
 	n = sscanf(ligne, "%d", &valeur);
 	while (n != 1)
 	{
-		printf ("Entrer une valeur entiere : ");
-		fgets (ligne, LONGUEUR_LIGNE, stdin);
-		n = sscanf (ligne, "%d", &valeur);
+		printf("Entrer une valeur entiere : ");
+		fgets(ligne, LONGUEUR_LIGNE, stdin);
+		n = sscanf(ligne, "%d", &valeur);
 	}
 	return valeur;
 }
@@ -344,9 +428,9 @@ float insererFlottant()
 	n = sscanf(ligne, "%f", &valeur);
 	while (n != 1)
 	{
-		printf ("Entrer une valeur flottante : ");
-		fgets (ligne, LONGUEUR_LIGNE, stdin);
-		n = sscanf (ligne, "%d", &valeur);
+		printf("Entrer une valeur flottante : ");
+		fgets(ligne, LONGUEUR_LIGNE, stdin);
+		n = sscanf(ligne, "%d", &valeur);
 	}
 	return valeur;
 }
