@@ -1,18 +1,37 @@
-/**
- * Ce programme gere des etudiants, leurs notes et leur moyenne.
+/*******************************************************************************************
+ * Auteurs		: Quentin Walter et Oscar Da Silva
+ * Date			: Mars 2014
+ * Nom			: Main.c
+ * Description	: TP AlgSd, HEIG-VD Fee
+ * Resume		:
+ *		Le but du TP est d'ecrire un programme qui gere les donnees des etudiants,
+ *		l'integration des notes et le calcul des moyennes, ensuite exporter dans un 
+ *		le fichier moyenne.txt
  *
- * Au demarrage, la liste des etudiants est recuperee depuis un fichier.
- * Il est possible de (1) ajouter des notes depuis un fichier en indiquant son nom,
- * (2) afficher la liste des etudiants, leurs notes et leur moyenne et (0) generer
- * un fichier des etudiants classe par moyenne, cette action arrete le programme.
+ * Description algorithme principal:
+ *		Au demarrage, la liste des etudiants est recuperee depuis le fichier "etudiant.txt".
+ *		Elle est ensuite inseree dans une liste chainee par la fonction "recupererEtudiantsFichier"
+ *		Si cette premirere etape s'est bien passee, ensuite on affiche le menu avec les 3 choix
+ *				1. Ajouter des notes depuis un fichier en indiquant son nom
+ *				2. Afficher la liste des etudiants, leurs notes et leurs moyennes
+ *				3. Generer un fichier des etudiants classe par moyenne et termine le programme
+ *		A la fin du programme on detruit les listes
+ *		
+ * Options choisies:
+ *		Les primites utilisees sont celles du fichier liste.c utilise pendant les cours.
+ *		Nous avons cree un fichier "fonctions.c" pour contenir les fonctions propres au projet.
+ *		Les prototypes sont dans le "fonction.h" et dans le "main.c".
+ *		Utilisation des puts au lieu des printf autant que possible. 	
+ *		Si possible nous avons essaye d'utiliser des #define (comme par exemple VRAI et FAUX)
  *
- * Oscar Da Silva et Quentin Walter, HEIG-VD, mars 2014
- */
+ *********************************************************************************************/
+
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <stdlib.h>
 #include <stdio.h>
 #include "liste.h"
 
+#pragma region "PROTOTYPES DE FONCTION"
 /**
  * Recupere les etudiants depuis le fichier FICHIER_ETUDIANT
  * ptPrem, pointeur qui pointe sur le premier element de la liste
@@ -69,6 +88,8 @@ void detruireListeEtudiants(typeElt **ptPrem);
  * (0) generer un fichier des etudiants classe par moyenne (fin du programme)
  * Affiche la liste des commandes en cas d'erreur de saisie
  */
+#pragma endregion
+
 void main()
 {
 	typeElt *listeEtudiants, *listeEtudiantsTriee;
@@ -78,7 +99,11 @@ void main()
 
 	if (recupererEtudiantsFichier(&listeEtudiants))
 	{
-		printf("Commande : ");
+		puts("MENU:");
+		puts("(1) ajouter des notes depuis un fichier en indiquant son nom");
+		puts("(2) afficher la liste des etudiants, leurs notes et leurs moyennes");
+		puts("(0) generer un fichier des etudiants classe par moyenne et termine le programme");
+		printf("Votre choix : ");
 		commande = insererEntier();
 		while (commande != 0)
 		{
@@ -94,9 +119,9 @@ void main()
 					puts("Commande inconnue");
 					puts("(1) ajouter des notes depuis un fichier en indiquant son nom");
 					puts("(2) afficher la liste des etudiants, leurs notes et leur moyenne");
-					puts("(0) generer un fichier des etudiants classe par moyenne (fin du programme)");
+					puts("(0) generer un fichier des etudiants classe par moyenne et termine le programme");
 			}
-			printf("Commande : ");
+			printf("Votre choix : ");
 			commande = insererEntier();
 		}
 	}
