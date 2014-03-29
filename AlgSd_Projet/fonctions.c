@@ -113,11 +113,13 @@ int recupererNotesFichier(typeElt *ptPrem)
 	float note;
 	FILE *fichier;
 
-	//Initialisation
+	// Initialisation
 	resultat = FAUX;
 	erreur = FAUX;
 	trouve = FAUX;
 	courant = ptPrem;
+
+	printf("Entrer nom de fichier (exemples: note1.txt, note2.txt, etc): ");
 	nomFichier = insererChaine();
 
 	// Ouverture des fichiers
@@ -181,6 +183,7 @@ int recupererNotesFichier(typeElt *ptPrem)
 			resultat = VRAI;
 		}
 	}
+	free(nomFichier);
 	return resultat;
 }
 
@@ -221,73 +224,6 @@ float calculerMoyenne(float tableauNotes[NOMBRE_NOTES_MAX], int nombreNotes)
 	}
 	return sommeNotes / nombreNotes;
 }
-//typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants)
-//{
-//	typeElt *listeEtudiantsTriee;
-//	typeElt *courant, *precedant, *courantTrie, *plusPetiteMoyenne, *precedantPlusPetiteMoyenne;
-//	typeEtudiant *etudiant;
-//	float moyenneNotes;
-//
-//	/* Initialiser la liste */
-//	initListe(&listeEtudiantsTriee);			// Initialiser la nouvelle liste
-//	courantTrie = NULL;							// Pointeur sur la nouvelle liste
-//	courant = *listeEtudiants;					// Pointeur sur la liste initiale
-//
-//	while (*listeEtudiants != NULL)
-//	{
-//		precedantPlusPetiteMoyenne = NULL;		// Elément précédant courant1
-//		
-//		etudiant = valElt(courant);
-//		moyenneNotes = etudiant->moyenneNotes;
-//		plusPetiteMoyenne = courant;
-//		
-//		if (etudiant->nombreNotes > 0)			// On en tient pas compte si l'etudiant n'a pas de note
-//		{
-//			if (etudiant->moyenneNotes < moyenneNotes)
-//			{
-//				precedantPlusPetiteMoyenne = precedant;
-//				plusPetiteMoyenne = courant;
-//				moyenneNotes = etudiant->moyenneNotes;
-//				courant = suivantElt(courant);
-//			}
-//			else
-//			{
-//				precedant = courant;
-//				courant = suivantElt(courant);
-//			}
-//		}
-//		else
-//		{
-//			courant = suivantElt(courant);
-//		}
-//		
-//
-//		//courant = suivantElt(courant);
-//
-//		//while (courant != NULL)
-//		//{
-//		//	etudiant = valElt(courant);
-//		//	if (etudiant->moyenneNotes < moyenneNotes)
-//		//	{
-//		//		precedantPlusPetiteMoyenne = precedant;
-//		//		plusPetiteMoyenne = courant;
-//		//		moyenneNotes = etudiant->moyenneNotes;
-//		//		courant = suivantElt(courant);
-//		//	}
-//		//	else
-//		//	{
-//		//		precedant = courant;
-//		//		courant = suivantElt(courant);
-//		//	}
-//		//}
-//
-//
-//		insereElt(&listeEtudiantsTriee, courantTrie, plusPetiteMoyenne); // L'insérer dans la nouvelle liste
-//		//detruireElt(listeEtudiants, precedantPlusPetiteMoyenne); // Le détruire dans la liste initiale
-//		courantTrie = plusPetiteMoyenne;
-//	}
-//	return listeEtudiantsTriee;
-//}
 
 typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants)
 {
@@ -301,19 +237,19 @@ typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants)
 
 	courant = *listeEtudiants;
 	precedant = NULL;
-	precedantTrie = NULL;
 	moyennePlusPetite = courant->val->moyenneNotes;
 
 	while (courant != NULL)
 	{
+		precedantTrie = NULL;
 		courantTrie = listeEtudiantsTrie;
 		etudiant = courant->val;
 		nouveau = creerElt(etudiant);
 
 		if (etudiant->moyenneNotes < moyennePlusPetite)				// Insertion en debut de liste
 		{
-			insereElt(&listeEtudiantsTrie, courantTrie, nouveau);
-			detruireElt(listeEtudiants, precedant);
+			insereElt(&listeEtudiantsTrie, precedantTrie, nouveau);
+			moyennePlusPetite = valElt(nouveau)->moyenneNotes;
 		}
 		else
 		{
@@ -324,10 +260,12 @@ typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants)
 				//etudiantTrie = courantTrie->val;
 				if (etudiant->moyenneNotes < moyennePlusPetite2)
 				{
-					insereElt(&listeEtudiantsTrie, precedantTrie, nouveau);
-					trouveMin = VRAI;
+					if (valElt(precedantTrie)->moyenneNotes != moyennePlusPetite2)
+					{
+						insereElt(&listeEtudiantsTrie, precedantTrie, nouveau);
+						trouveMin = VRAI;
+					}
 				}
-
 				precedantTrie = courantTrie;
 				courantTrie = suivantElt(courantTrie);
 				if (courantTrie != NULL)
@@ -341,7 +279,6 @@ typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants)
 			}
 		}
 		courant = suivantElt(courant);
-
 	}
 	return listeEtudiantsTrie;
 }
@@ -434,9 +371,76 @@ float insererFlottant()
 	}
 	return valeur;
 }
-char *insererChaine()
+char* insererChaine()
 {
-	return "note1.txt";
+	// Tampon pour contenir la ligne saisie
+	char* tampon = NULL;
+	char* temp = NULL;
+	char* minimum = NULL;
+
+	// Capacite de la ligne
+	unsigned int capacite = 0;
+
+	// Nombre de caracteres dans le tampon
+	unsigned int n = 0;
+
+	// Caractere lu
+	int c;
+
+	// Lecture caractere par caratere depuis le terminal
+	while ((c = fgetc(stdin)) != '\n' && c != EOF)
+	{
+		// Augemente le tampon si besoin
+		if (n + 1 > capacite)
+		{
+			// Determine la nouvelle capacite: Debut a 32 et ensuite double
+			if (capacite == 0)
+			{
+				capacite = 32;
+			}
+			else if (capacite <= (UINT_MAX / 2))
+			{
+				capacite *= 2;
+			}
+			else
+			{
+				free(tampon);
+				return NULL;
+			}
+
+			// Extension de la memoire tampon
+			temp = realloc(tampon, capacite * sizeof(char));	
+
+			if (temp == NULL)
+			{
+				free(tampon);
+				return NULL;
+			}
+			tampon = temp;
+		}
+
+		// Ajout du caractere au tampon
+		tampon[n++] = c;
+	}
+
+	// return NULL if user provided no input
+	if (n == 0 && c == EOF)
+	{
+		return NULL;
+	}
+
+	// Adaptation du tampon au besoin minimum
+	minimum = malloc((n + 1) * sizeof(char));
+	strncpy(minimum, tampon, n);
+	free(tampon);
+
+	// Fin de la chaine
+	minimum[n] = '\0';
+
+	// Retourne la chaine
+	return minimum;
+
+	//return "note1.txt";
 }
 void imprimerEtudiants(typeElt *listeEtudiants)
 {
