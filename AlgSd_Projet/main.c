@@ -1,30 +1,36 @@
-/*******************************************************************************************
+/********************************************************************************
  * Auteurs		: Quentin Walter et Oscar Da Silva
  * Date			: Mars 2014
  * Nom			: main.c
  * Description	: TP AlgSd, HEIG-VD Fee
  * Resume		:
- *		Le but du TP est d'ecrire un programme qui gere les donnees des etudiants,
- *		l'integration des notes et le calcul des moyennes, ensuite exporter dans un 
+ *		Le but du TP est d'ecrire un programme qui gere les donnees des etudiants
+ *		l'integration des notes et le calcul des moyennes, ensuite exporter dans
  *		le fichier moyenne.txt
  *
  * Description algorithme principal:
- *		Au demarrage, la liste des etudiants est recuperee depuis le fichier "etudiant.txt".
- *		Elle est ensuite inseree dans une liste chainee par la fonction "recupererEtudiantsFichier"
- *		Si cette premirere etape s'est bien passee, ensuite on affiche le menu avec les 3 choix
+ *		Au demarrage, la liste des etudiants est recuperee depuis le fichier 
+ *		"etudiant.txt". Elle est ensuite inseree dans une liste chainee par 
+ *		la fonction "recupererEtudiantsFichier"
+ *		Si cette premirere etape s'est bien passee, on affiche le menu avec les 
+ *		3 choix ci-dessous:
  *				1. Ajouter des notes depuis un fichier en indiquant son nom
  *				2. Afficher la liste des etudiants, leurs notes et leurs moyennes
- *				0. Generer un fichier des etudiants classe par moyenne et termine le programme
+ *				0. Generer un fichier des etudiants classe par moyenne et termine 
+ *				   le programme
  *		A la fin du programme on detruit les listes
  *		
  * Options choisies:
- *		Les primitives utilisees sont celles du fichier liste.c utilise durant le cours.
- *		Nous avons cree un fichier "fonctions.c" pour contenir les fonctions propres au projet.
+ *		Les primitives utilisees sont celles du fichier liste.c utilise durant 
+ *		le cours. Nous avons cree un fichier "fonctions.c" pour contenir 
+ *		les fonctions propres au projet.
  *		Les prototypes sont dans le "fonction.h" et dans le "main.c".
  *		Utilisation des puts au lieu des printf autant que possible. 	
- *		Si possible nous avons essaye d'utiliser des #define (comme par exemple VRAI et FAUX)
+ *		Si possible nous avons essaye d'utiliser des #define
+ *		(comme par exemple VRAI et FAUX)
+ *		Utilisation le plus possible de fonctions ou bouts de code utilés en classe
  *
- *********************************************************************************************/
+ *********************************************************************************/
 
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <stdlib.h>
@@ -32,79 +38,101 @@
 #include "liste.h"
 
 #pragma region "PROTOTYPES DE FONCTION"
-/**
- * Recupere les etudiants depuis le fichier FICHIER_ETUDIANT
- * listeEtudiants, pointeur qui pointe sur le premier element de la liste
- * Retourne VRAI (1) si il n'y a pas d'erreur, sinon FAUX (0).
- */
+/**********************************************************************************
+ * Description	: Recupere les etudiants depuis le fichier "FICHIER_ETUDIANT"
+ * Parametres	: listeEtudiants, pointeur qui pointe sur le debut de la liste
+ * Retour		: VRAI (1) si il n'y a pas d'erreur, sinon FAUX (0)
+ **********************************************************************************/
 int recupererEtudiantsFichier(typeElt **listeEtudiants);
-/**
- * Insere un etudiant dans la liste ptPrem
- * listeEtudiants, pointeur qui pointe sur le premier element de la liste
- * etudiant, structure qui contient les informations de l'etudiant
- * Retourne VRAI (1) si il n'y a pas d'erreur, sinon FAUX (0).
- */
+
+/***********************************************************************************
+* Description	: Insere un etudiant dans la liste "listeEtudiants"
+* Parametres	: listeEtudiants, pointeur qui pointe sur le debut de la liste
+*				  etudiant, structure qui contient les informations de l'etudiant
+* Retour		: VRAI (1) si il n'y a pas d'erreur, sinon FAUX (0)
+************************************************************************************/
 int insererEtudiant(typeElt **listeEtudiants, typeEtudiant *etudiant);
-/**
- * Trie la liste des etudiants selon leur moyenne
- * listeEtudiants, pointeur qui pointe sur le premier element de la liste
- * Retourne une nouvelle liste créée dans la fonction
- */
+
+/***********************************************************************************
+* Description	: Trie la liste des etudiants selon leur moyenne
+* Parametres	: listeEtudiants, pointeur qui pointe sur le debut de la liste
+* Retour		: Pointeur sur une nouvelle liste créée dans la fonction
+************************************************************************************/
 typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants);
-/**
- * Genere un fichier de moyenne a partir d'une liste
- * listeEtudiants, pointeur qui pointe sur le premier element de la liste
- * Retourne VRAI (1) si il n'y a pas d'erreur, sinon FAUX (0).
- */
+
+/************************************************************************************
+* Description	: Genere un fichier de moyenne a partir d'une liste
+* Parametres	: listeEtudiants, pointeur qui pointe sur le premier element 
+*				  de la liste
+* Retour		: VRAI (1) si il n'y a pas d'erreur, sinon FAUX (0).
+************************************************************************************/
 int genererFichierMoyenne(typeElt *listeEtudiants);
-/**
- * Recupère les notes depuis un fichier
- * listeEtudiants, pointeur sur le premier element de la liste
- * Retourne VRAI (1) si il n'y a pas d'erreur, sinon FAUX (0).
- */
+
+/************************************************************************************
+* Description	: Recupère les notes depuis un fichier
+* Parametres	: listeEtudiants, pointeur qui pointe sur le premier element 
+*				  de la liste
+* Retour		: VRAI (1) si il n'y a pas d'erreur, sinon FAUX (0).
+************************************************************************************/
 int recupererNotesFichier(typeElt *listeEtudiants);
-/**
- * Affiche les etudiants, leurs notes et leur moyenne
- * listeEtudiants, pointeur sur le premier element de la liste
- */
+
+/************************************************************************************
+* Description	: Affiche les etudiants, leurs notes et leur moyenne
+* Parametres	: listeEtudiants, pointeur qui pointe sur le premier element 
+*				  de la liste
+* Retour		: -
+************************************************************************************/
 void imprimerEtudiants(typeElt *listeEtudiants);
-/**
- * Permet la saisie d'une valeur entiere
- * Retourne la valeur saisie
- */
+
+/************************************************************************************
+* Description	: Permet la saisie d'une valeur entiere
+* Parametres	: -
+* Retour		: Un entier3 comme valeur saisie
+************************************************************************************/
 int insererEntier();
-/**
- * Permet la saisie d'une valeur flottante
- * Retourne la valeur saisie
- */
+
+/************************************************************************************
+* Description	: Permet la saisie d'une valeur flottante
+* Parametres	: -
+* Retour		: Un flottant comme valeur saisie
+************************************************************************************/
 float insererFlottant();
-/**
- * Affiche la liste des etudiants, leurs notes et leur moyenne
- * listeEtudiants, pointeur sur le premier element de la liste des etudiants
- */
+
+/************************************************************************************
+* Description	: Destruction liste etudiants
+* Parametres	: listeEtudiants, pointeur qui pointe sur le debut de la liste
+* Retour		: -
+************************************************************************************/
 void detruireListeEtudiants(typeElt **listeEtudiants);
-/**
- * Detruit les elements de la liste des etudiants
- * ptPrem, pointeur qui pointe sur le premier element de la liste
- */
+
+/************************************************************************************
+* Description	: Detruit les elements de la liste des etudiants
+* Parametres	: listeEtudiants, pointeur qui pointe sur le debut de la liste
+* Retour		: -
+************************************************************************************/
 void detruireListeEtudiants(typeElt **listeEtudiants);
-/**
- * Initialise la liste et permet l'execution des commandes :
- * (1) ajouter des notes depuis un fichier en indiquant son nom
- * (2) afficher la liste des etudiants, leurs notes et leur moyenne
- * (0) generer un fichier des etudiants classe par moyenne (fin du programme)
- * Affiche la liste des commandes en cas d'erreur de saisie
- */
 #pragma endregion
+
+/************************************************************************************
+* Description	: Initialise la liste et permet l'execution des commandes :
+*				  (1) ajouter des notes depuis un fichier en indiquant son nom
+*				  (2) afficher la liste des etudiants, leurs notes et leur moyenne
+*				  (0) generer un fichier des etudiants classe par moyenne (fin du programme)
+*				  Affiche la liste des commandes en cas d'erreur de saisie
+* Parametres	: -
+* Retour		: -
+**************************************************************************************/
 
 void main()
 {
 	typeElt *listeEtudiants, *listeEtudiantsTriee;
 	int commande;
 	
+	// Initialisation de la liste
 	initListe(&listeEtudiants);
 
-	if (recupererEtudiantsFichier(&listeEtudiants))
+	// On contrôle que la recupération se passe bien, si oui on continue
+	if (recupererEtudiantsFichier(&listeEtudiants)) 
 	{
 		puts("MENU:");
 		puts("(1) ajouter des notes depuis un fichier en indiquant son nom");
@@ -133,12 +161,15 @@ void main()
 		}
 	}
 
+	// Recuperation d'une liste triee selon les moyennes
 	listeEtudiantsTriee = trierEtudiantsMoyenne(&listeEtudiants);
-	//imprimerEtudiants(listeEtudiantsTriee);
+
+	// Creation du fichier "moyenne.txt"
 	genererFichierMoyenne(listeEtudiantsTriee);
+
 	// Détruit les listes
 	detruireListeEtudiants(&listeEtudiants);
 	listeEtudiantsTriee = NULL;
-	//detruireListeEtudiants(&listeEtudiantsTriee);		// Pas besoin de suppriemr les elements vu qu'ils ont ete supprimes avant
+
 	system("pause");
 }

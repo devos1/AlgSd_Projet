@@ -1,6 +1,10 @@
-/**
- * Fonctions primitives des listes (liste.c)
- */
+/********************************************************************************
+* Auteurs		: Quentin Walter et Oscar Da Silva
+* Date			: Mars 2014
+* Nom			: liste.c
+* Description	: TP AlgSd, HEIG-VD Fee
+* Resume		: Fichier avec les fonctions primitives vues en cours
+/*******************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include "liste.h"

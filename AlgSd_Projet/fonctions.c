@@ -1,7 +1,11 @@
-﻿/**
- * Fonctions du programme (fonctions.c)
- * Oscar Da Silva et Quentin Walter, HEIG-VD, mars 2014
- */
+﻿/********************************************************************************
+* Auteurs		: Quentin Walter et Oscar Da Silva
+* Date			: Mars 2014
+* Nom			: fonctions.c
+* Description	: TP AlgSd, HEIG-VD Fee
+* Resume		: Fichier contenant divers fonctions utilisees dans ce projet
+/*******************************************************************************/
+
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <stdio.h>
 #include <stdlib.h>
@@ -104,6 +108,7 @@ int insererEtudiant(typeElt **listeEtudiants, typeEtudiant *etudiant)
 	}
 	return resultat;
 }
+
 int recupererNotesFichier(typeElt *listeEtudiants)
 {
 	typeElt *courant;
@@ -212,6 +217,7 @@ int insererNote(typeEtudiant *etudiant, float note)
 	}
 	return resultat;
 }
+
 float calculerMoyenne(float tableauNotes[NOMBRE_NOTES_MAX], int nombreNotes)
 {
 	float sommeNotes;
@@ -237,52 +243,65 @@ typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants)
 
 	courant = *listeEtudiants;
 	precedant = NULL;
-	moyennePlusPetite = courant->val->moyenneNotes; //!\
+	moyennePlusPetite = valElt(courant)->moyenneNotes;
 
+	// On prend l'élément de la liste non trié et on l'insére directement
+	// à la bonne place dans la liste triée
 	while (courant != NULL)
 	{
 		precedantTrie = NULL;
 		courantTrie = listeEtudiantsTrie;
-		etudiant = courant->val; //!\
+		etudiant = valElt(courant);
 
 		nouveau = creerElt(etudiant);
 
-		if (etudiant->moyenneNotes < moyennePlusPetite)				// Insertion en debut de liste
+		// Si l'étudiant en cours a une moyenne plus petite
+		// que la plus petite dans la liste triée on le mets directement
+		// en début de liste
+		if (etudiant->moyenneNotes < moyennePlusPetite)
 		{
 			insereElt(&listeEtudiantsTrie, precedantTrie, nouveau);
 			moyennePlusPetite = valElt(nouveau)->moyenneNotes;
 		}
-		else
+		// Sinon on va rechercher la plus petite et on l'insére après le précedent 
+		else 
 		{
 			moyennePlusPetite2 = moyennePlusPetite;
 			trouveMin = FAUX;
-			while (courantTrie != NULL && !trouveMin)		// Tant qu'on a pas le minimum
+			while (courantTrie != NULL && !trouveMin) // Tant qu'on a pas le minimum
 			{
 				if (etudiant->moyenneNotes < moyennePlusPetite2)
 				{
+					// Cette partie sert a gérer les cas où il y a
+					// plusieurs fois la même note
 					if (valElt(precedantTrie)->moyenneNotes != moyennePlusPetite2)
 					{
 						insereElt(&listeEtudiantsTrie, precedantTrie, nouveau);
 						trouveMin = VRAI;
 					}
 				}
+				// On avance
 				precedantTrie = courantTrie;
 				courantTrie = suivantElt(courantTrie);
 				if (courantTrie != NULL)
 				{
+					// On prend la moyenne plus petite pour autant
+					// qu'on ne soit pas en fin de liste
 					moyennePlusPetite2 = valElt(courantTrie)->moyenneNotes;
 				}			
 			}
 			if (!trouveMin)
 			{
-				insereElt(&listeEtudiantsTrie, precedantTrie, nouveau);	// Insertion en derniere position
+				// Si on a pas trouve de minimum, on insère en fin de liste
+				insereElt(&listeEtudiantsTrie, precedantTrie, nouveau);
 			}
 		}
+		// On avance
 		courant = suivantElt(courant);
 	}
+	// On retourne la nouvelle liste triée
 	return listeEtudiantsTrie;
 }
-
 
 int genererFichierMoyenne(typeElt *listeEtudiants)
 {
@@ -309,12 +328,12 @@ int genererFichierMoyenne(typeElt *listeEtudiants)
 			while (courant != NULL)
 			{
 				etudiant = valElt(courant);
-				fprintf(fichier, "%d\t%s\t%s\t%d\t%d\t%d\t", etudiant->matricule, etudiant->nom, etudiant->prenom, etudiant->dateNaissance.jour, etudiant->dateNaissance.mois, etudiant->dateNaissance.annee);
+				fprintf(fichier, "%d\t%8s\t%8s\t%d\t%d\t%d\t", etudiant->matricule, etudiant->nom, etudiant->prenom, etudiant->dateNaissance.jour, etudiant->dateNaissance.mois, etudiant->dateNaissance.annee);
 				if (etudiant->nombreNotes > 0) // Si l'etudiant a au moins une note
 				{
 					for (i = 0; i < etudiant->nombreNotes; i++)
 					{
-						fprintf(fichier, "%3.2f\t", etudiant->tableauNotes[i]);
+						fprintf(fichier, "%3.1f\t", etudiant->tableauNotes[i]);
 					}
 					fprintf(fichier, "%.1f\n", etudiant->moyenneNotes);
 				}
@@ -340,6 +359,7 @@ int genererFichierMoyenne(typeElt *listeEtudiants)
 
 	return resultat;
 }
+
 int insererEntier()
 {
 	int n, valeur;
@@ -355,6 +375,7 @@ int insererEntier()
 	}
 	return valeur;
 }
+
 float insererFlottant()
 {
 	int n;
@@ -371,77 +392,27 @@ float insererFlottant()
 	}
 	return valeur;
 }
+
 char* insererChaine()
 {
-	// Tampon pour contenir la ligne saisie
-	char* tampon = NULL;
-	char* temp = NULL;
-	char* minimum = NULL;
+	char ligne[LONGUEUR_LIGNE];
+	char *res;
 
-	// Capacite de la ligne
-	unsigned int capacite = 0;
+	// Lecture d'une ligne au clavier
+	fgets(ligne, LONGUEUR_LIGNE, stdin);
 
-	// Nombre de caracteres dans le tampon
-	unsigned int n = 0;
+	// Supprimer \n
+	ligne[strlen(ligne) - 1] = '\0';
 
-	// Caractere lu
-	int c;
+	// Allouer une zone memoire
+	res = malloc(strlen(ligne) + 1);
 
-	// Lecture caractere par caratere depuis le terminal
-	while ((c = fgetc(stdin)) != '\n' && c != EOF)
-	{
-		// Augemente le tampon si besoin
-		if (n + 1 > capacite)
-		{
-			// Determine la nouvelle capacite: Debut a 32 et ensuite double
-			if (capacite == 0)
-			{
-				capacite = 32;
-			}
-			else if (capacite <= (UINT_MAX / 2))
-			{
-				capacite *= 2;
-			}
-			else
-			{
-				free(tampon);
-				return NULL;
-			}
+	// Recopier dans la zone memoire
+	strcpy(res, ligne);
 
-			// Extension de la memoire tampon
-			temp = realloc(tampon, capacite * sizeof(char));	
-
-			if (temp == NULL)
-			{
-				free(tampon);
-				return NULL;
-			}
-			tampon = temp;
-		}
-
-		// Ajout du caractere au tampon
-		tampon[n++] = c;
-	}
-
-	// return NULL if user provided no input
-	if (n == 0 && c == EOF)
-	{
-		return NULL;
-	}
-
-	// Adaptation du tampon au besoin minimum
-	minimum = malloc((n + 1) * sizeof(char));
-	strncpy(minimum, tampon, n);
-	free(tampon);
-
-	// Fin de la chaine
-	minimum[n] = '\0';
-
-	// Retourne la chaine
-	return minimum;
-
-	//return "note1.txt";
+	return res;
 }
+
 void imprimerEtudiants(typeElt *listeEtudiants)
 {
 	typeElt *courant;
@@ -460,7 +431,7 @@ void imprimerEtudiants(typeElt *listeEtudiants)
 			{
 				printf("%3.1f ", etudiant->tableauNotes[i]);
 			}
-			printf(" : %.2f\n", etudiant->moyenneNotes);
+			printf(" : %.1f\n", etudiant->moyenneNotes);
 		}
 		else
 		{
@@ -469,6 +440,7 @@ void imprimerEtudiants(typeElt *listeEtudiants)
 		courant = suivantElt(courant);
 	}
 }
+
 void detruireListeEtudiants(typeElt **listeEtudiants)
 {
 	typeEtudiant *etudiant;

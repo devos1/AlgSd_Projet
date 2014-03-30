@@ -1,7 +1,10 @@
-/**
- * Header des fonctions primitives des listes (liste.h)
- * Oscar Da Silva et Quentin Walter, HEIG-VD, mars 2014
- */
+/********************************************************************************
+* Auteurs		: Quentin Walter et Oscar Da Silva
+* Date			: Mars 2014
+* Nom			: liste.h
+* Description	: TP AlgSd, HEIG-VD Fee
+* Resume		: Header du fichier avec les fonctions primitives vues en cours
+/*******************************************************************************/
 #include "fonctions.h"
 
 /* Type des éléments stockés dans le champ donnée */

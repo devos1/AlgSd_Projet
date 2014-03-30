@@ -1,1 +1,15 @@
 - POUR NOS COMMENTAIRES:
+-------------------------
+- Fait le 30.03.2014 (Oscar)
+	- Changé fonction pour insertion chaine
+	- Optimisé l'affichage dans le fichier "moyenne.txt"
+	- Uniformisation des en-têtes
+	- Utilisation des primitives dans la fonction pour trier les étudiants
+	- Amélioration des commentaires dans les prototypes fonction
+	- Ajout là où il en manquait
+	- Correction de fautes de frappe
+	- Ajout commentaires dans fonction trierListe...
+	- Mise en forme pour impression
+		- main.c --> OK
+		- les autre normalement aussi, mais pas contrôlé
+
