@@ -16,7 +16,7 @@
 #define NOTE_MIN 1
 #define NOTE_MAX 6
 
-int recupererEtudiantsFichier(typeElt **ptPrem)
+int recupererEtudiantsFichier(typeElt **listeEtudiants)
 {
 	typeEtudiant *etudiant;
 	typeElt *courant;
@@ -53,9 +53,9 @@ int recupererEtudiantsFichier(typeElt **ptPrem)
 				else
 				{
 					// On initialise le nombre et la moyenne des notes à 0
-					etudiant->nombreNotes = 0; // Ne s'initialise pas...
+					etudiant->nombreNotes = 0;
 					etudiant->moyenneNotes = 0;
-					if (!insererEtudiant(ptPrem, etudiant))
+					if (!insererEtudiant(listeEtudiants, etudiant))
 					{
 						puts("Erreur lors de l'insertion de l'etudiant dans la liste");
 						erreur = VRAI;
@@ -74,14 +74,14 @@ int recupererEtudiantsFichier(typeElt **ptPrem)
 	return resultat;
 }
 
-int insererEtudiant(typeElt **ptPrem, typeEtudiant *etudiant)
+int insererEtudiant(typeElt **listeEtudiants, typeEtudiant *etudiant)
 {
 	typeElt *courant, *precedent, *nouveau;
 	typeEtudiant *etudiantCourant;
 	int resultat;
 	int trouve;
 
-	courant = *ptPrem;
+	courant = *listeEtudiants;
 	precedent = NULL;
 	trouve = FAUX;
 	resultat = FAUX;
@@ -99,12 +99,12 @@ int insererEtudiant(typeElt **ptPrem, typeEtudiant *etudiant)
 	nouveau = creerElt(etudiant);
 
 	if (nouveau != NULL) {
-		insereElt(ptPrem, precedent, nouveau);
+		insereElt(listeEtudiants, precedent, nouveau);
 		resultat = VRAI;
 	}
 	return resultat;
 }
-int recupererNotesFichier(typeElt *ptPrem)
+int recupererNotesFichier(typeElt *listeEtudiants)
 {
 	typeElt *courant;
 	typeEtudiant *etudiant;
@@ -117,7 +117,7 @@ int recupererNotesFichier(typeElt *ptPrem)
 	resultat = FAUX;
 	erreur = FAUX;
 	trouve = FAUX;
-	courant = ptPrem;
+	courant = listeEtudiants;
 
 	printf("Entrer nom de fichier (exemples: note1.txt, note2.txt, etc): ");
 	nomFichier = insererChaine();
@@ -172,7 +172,7 @@ int recupererNotesFichier(typeElt *ptPrem)
 					puts("Erreur dans les donnees du fichier");
 					erreur = VRAI;
 				}
-				courant = ptPrem; // On remet le pointeur au début de la liste
+				courant = listeEtudiants; // On remet le pointeur au début de la liste
 			}
 			fgets(ligne, LONGUEUR_LIGNE, fichier);
 		}
@@ -237,13 +237,14 @@ typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants)
 
 	courant = *listeEtudiants;
 	precedant = NULL;
-	moyennePlusPetite = courant->val->moyenneNotes;
+	moyennePlusPetite = courant->val->moyenneNotes; //!\
 
 	while (courant != NULL)
 	{
 		precedantTrie = NULL;
 		courantTrie = listeEtudiantsTrie;
-		etudiant = courant->val;
+		etudiant = courant->val; //!\
+
 		nouveau = creerElt(etudiant);
 
 		if (etudiant->moyenneNotes < moyennePlusPetite)				// Insertion en debut de liste
@@ -257,7 +258,6 @@ typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants)
 			trouveMin = FAUX;
 			while (courantTrie != NULL && !trouveMin)		// Tant qu'on a pas le minimum
 			{
-				//etudiantTrie = courantTrie->val;
 				if (etudiant->moyenneNotes < moyennePlusPetite2)
 				{
 					if (valElt(precedantTrie)->moyenneNotes != moyennePlusPetite2)
@@ -275,7 +275,7 @@ typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants)
 			}
 			if (!trouveMin)
 			{
-				insereElt(&listeEtudiantsTrie, precedantTrie, nouveau);	// Insertion en dernirere position
+				insereElt(&listeEtudiantsTrie, precedantTrie, nouveau);	// Insertion en derniere position
 			}
 		}
 		courant = suivantElt(courant);
@@ -309,12 +309,12 @@ int genererFichierMoyenne(typeElt *listeEtudiants)
 			while (courant != NULL)
 			{
 				etudiant = valElt(courant);
-				fprintf(fichier, "%d %s %s %d %d %d ", etudiant->matricule, etudiant->nom, etudiant->prenom, etudiant->dateNaissance.jour, etudiant->dateNaissance.mois, etudiant->dateNaissance.annee);
+				fprintf(fichier, "%d\t%s\t%s\t%d\t%d\t%d\t", etudiant->matricule, etudiant->nom, etudiant->prenom, etudiant->dateNaissance.jour, etudiant->dateNaissance.mois, etudiant->dateNaissance.annee);
 				if (etudiant->nombreNotes > 0) // Si l'etudiant a au moins une note
 				{
 					for (i = 0; i < etudiant->nombreNotes; i++)
 					{
-						fprintf(fichier, "%3.1f ", etudiant->tableauNotes[i]);
+						fprintf(fichier, "%3.2f\t", etudiant->tableauNotes[i]);
 					}
 					fprintf(fichier, "%.1f\n", etudiant->moyenneNotes);
 				}
@@ -460,7 +460,7 @@ void imprimerEtudiants(typeElt *listeEtudiants)
 			{
 				printf("%3.1f ", etudiant->tableauNotes[i]);
 			}
-			printf(" : %.1f\n", etudiant->moyenneNotes);
+			printf(" : %.2f\n", etudiant->moyenneNotes);
 		}
 		else
 		{

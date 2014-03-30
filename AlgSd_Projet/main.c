@@ -1,7 +1,7 @@
 /*******************************************************************************************
  * Auteurs		: Quentin Walter et Oscar Da Silva
  * Date			: Mars 2014
- * Nom			: Main.c
+ * Nom			: main.c
  * Description	: TP AlgSd, HEIG-VD Fee
  * Resume		:
  *		Le but du TP est d'ecrire un programme qui gere les donnees des etudiants,
@@ -14,11 +14,11 @@
  *		Si cette premirere etape s'est bien passee, ensuite on affiche le menu avec les 3 choix
  *				1. Ajouter des notes depuis un fichier en indiquant son nom
  *				2. Afficher la liste des etudiants, leurs notes et leurs moyennes
- *				3. Generer un fichier des etudiants classe par moyenne et termine le programme
+ *				0. Generer un fichier des etudiants classe par moyenne et termine le programme
  *		A la fin du programme on detruit les listes
  *		
  * Options choisies:
- *		Les primites utilisees sont celles du fichier liste.c utilise pendant les cours.
+ *		Les primitives utilisees sont celles du fichier liste.c utilise durant le cours.
  *		Nous avons cree un fichier "fonctions.c" pour contenir les fonctions propres au projet.
  *		Les prototypes sont dans le "fonction.h" et dans le "main.c".
  *		Utilisation des puts au lieu des printf autant que possible. 	
@@ -34,33 +34,40 @@
 #pragma region "PROTOTYPES DE FONCTION"
 /**
  * Recupere les etudiants depuis le fichier FICHIER_ETUDIANT
- * ptPrem, pointeur qui pointe sur le premier element de la liste
+ * listeEtudiants, pointeur qui pointe sur le premier element de la liste
  * Retourne VRAI (1) si il n'y a pas d'erreur, sinon FAUX (0).
  */
-int recupererEtudiantsFichier(typeElt **ptPrem);
+int recupererEtudiantsFichier(typeElt **listeEtudiants);
 /**
  * Insere un etudiant dans la liste ptPrem
- * ptPrem, pointeur qui pointe sur le premier element de la liste
+ * listeEtudiants, pointeur qui pointe sur le premier element de la liste
  * etudiant, structure qui contient les informations de l'etudiant
  * Retourne VRAI (1) si il n'y a pas d'erreur, sinon FAUX (0).
  */
-int insererEtudiant(typeElt **ptPrem, typeEtudiant *etudiant);
+int insererEtudiant(typeElt **listeEtudiants, typeEtudiant *etudiant);
 /**
- * 
- * 
+ * Trie la liste des etudiants selon leur moyenne
+ * listeEtudiants, pointeur qui pointe sur le premier element de la liste
+ * Retourne une nouvelle liste créée dans la fonction
  */
 typeElt *trierEtudiantsMoyenne(typeElt **listeEtudiants);
 /**
- * 
- * 
+ * Genere un fichier de moyenne a partir d'une liste
+ * listeEtudiants, pointeur qui pointe sur le premier element de la liste
+ * Retourne VRAI (1) si il n'y a pas d'erreur, sinon FAUX (0).
  */
 int genererFichierMoyenne(typeElt *listeEtudiants);
 /**
  * Recupère les notes depuis un fichier
- * ptPrem, pointeur du premier element de la liste
+ * listeEtudiants, pointeur sur le premier element de la liste
  * Retourne VRAI (1) si il n'y a pas d'erreur, sinon FAUX (0).
  */
-int recupererNotesFichier(typeElt *ptPrem);
+int recupererNotesFichier(typeElt *listeEtudiants);
+/**
+ * Affiche les etudiants, leurs notes et leur moyenne
+ * listeEtudiants, pointeur sur le premier element de la liste
+ */
+void imprimerEtudiants(typeElt *listeEtudiants);
 /**
  * Permet la saisie d'une valeur entiere
  * Retourne la valeur saisie
@@ -80,7 +87,7 @@ void detruireListeEtudiants(typeElt **listeEtudiants);
  * Detruit les elements de la liste des etudiants
  * ptPrem, pointeur qui pointe sur le premier element de la liste
  */
-void detruireListeEtudiants(typeElt **ptPrem);
+void detruireListeEtudiants(typeElt **listeEtudiants);
 /**
  * Initialise la liste et permet l'execution des commandes :
  * (1) ajouter des notes depuis un fichier en indiquant son nom

@@ -19,6 +19,7 @@ typedef struct {
 	float tableauNotes[NOMBRE_NOTES_MAX];	// Tableau des notes de l'étudiant (max. 5)
 	float moyenneNotes;		// Moyenne des notes de l'étudiant
 } typeEtudiant;
+
 /**
  * Permet la saisie d'une chaine de caracteres
  * Retourne la valeur saisie
